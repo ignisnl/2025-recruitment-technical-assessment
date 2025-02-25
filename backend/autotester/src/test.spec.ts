@@ -2,7 +2,7 @@ import request from "supertest";
 
 describe("Task 1", () => {
   describe("POST /parse", () => {
-    const getTask1 = async (inputStr: string) => {
+    const getTask1 = async (inputStr) => {
       return await request("http://localhost:8080")
         .post("/parse")
         .send({ input: inputStr });
@@ -27,7 +27,7 @@ describe("Task 1", () => {
 
 describe("Task 2", () => {
   describe("POST /entry", () => {
-    const putTask2 = async (data: string | object) => {
+    const putTask2 = async (data) => {
       return await request("http://localhost:8080").post("/entry").send(data);
     };
 
@@ -98,11 +98,11 @@ describe("Task 2", () => {
 
 describe("Task 3", () => {
   describe("GET /summary", () => {
-    const postEntry = async (data: string | object) => {
+    const postEntry = async (data) => {
       return await request("http://localhost:8080").post("/entry").send(data);
     };
 
-    const getTask3 = async (name: string) => {
+    const getTask3 = async (name) => {
       return await request("http://localhost:8080").get(
         `/summary?name=${name}`
       );

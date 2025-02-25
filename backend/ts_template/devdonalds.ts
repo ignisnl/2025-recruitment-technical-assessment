@@ -59,7 +59,7 @@ app.post("/entry", (req:Request, res:Response) => {
 
 // [TASK 3] ====================================================================
 // Endpoint that returns a summary of a recipe that corresponds to a query name
-app.get("/summary", (req:Request, res:Request) => {
+app.get("/summary", (req:Request, res:Response) => {
   // TODO: implement me
   res.status(500).send("not yet implemented!")
 

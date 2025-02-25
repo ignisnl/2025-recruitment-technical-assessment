@@ -18,6 +18,26 @@ describe("Task 1", () => {
       expect(response.body).toStrictEqual({ msg: "Alpha Alfredo" });
     });
 
+    it("example3", async () => {
+      const response = await getTask1("  alpHa-alFRedo   ");
+      expect(response.body).toStrictEqual({ msg: "Alpha Alfredo" });
+    });
+
+    it("example4", async () => {
+      const response = await getTask1("Riz@z     RISO00tto!");
+      expect(response.body).toStrictEqual({ msg: "Rizz Risotto" });
+    });
+
+    it("example5", async () => {
+      const response = await getTask1("meatball");
+      expect(response.body).toStrictEqual({ msg: "Meatball" });
+    });
+
+    it("example6", async () => {
+      const response = await getTask1("@_%");
+      expect(response.status).toBe(400);
+    });
+
     it("error case", async () => {
       const response = await getTask1("");
       expect(response.status).toBe(400);
@@ -92,6 +112,19 @@ describe("Task 2", () => {
         cookTime: 8,
       });
       expect(resp3.status).toBe(400);
+    });
+
+    it("Unique required items", async () => {
+      const meatball = {
+        type: "recipe",
+        name: "Meatball",
+        requiredItems: [
+          { name: "Beef", quantity: 1 },
+          { name: "Beef", quantity: 1 },
+        ],
+      };
+      const resp1 = await putTask2(meatball);
+      expect(resp1.status).toBe(400);
     });
   });
 });

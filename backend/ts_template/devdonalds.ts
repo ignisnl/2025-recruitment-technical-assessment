@@ -44,9 +44,15 @@ app.post("/parse", (req: Request, res: Response) => {
 // [TASK 1] ====================================================================
 // Takes in a recipeName and returns it in a form that
 const parse_handwriting = (recipeName: string): string | null => {
-  // TODO: implement me
-  return recipeName
-}
+  recipeName = recipeName
+    .replace(/[-_]/g, " ")
+    .replace(/[^a-zA-Z ]/g, "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (s) => s.toUpperCase());
+  return recipeName.length !== 0 ? recipeName : null;
+};
 
 // [TASK 2] ====================================================================
 // Endpoint that adds a CookbookEntry to your magical cookbook

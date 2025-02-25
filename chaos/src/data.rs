@@ -3,20 +3,36 @@ use serde::{Deserialize, Serialize};
 
 pub async fn process_data(Json(request): Json<DataRequest>) -> impl IntoResponse {
     // Calculate sums and return response
+    let mut string_len = 0;
+    let mut int_sum = 0;
+    for entry in request.data {
+        match entry {
+            Entry::I32(i) => {
+                int_sum += i;
+            }
+            Entry::String(s) => {
+                string_len += s.len();
+            },
+        }
+    }
 
-    let response = DataResponse {
-        
-    };
+    (StatusCode::OK, Json(DataResponse { string_len, int_sum }))
+}
 
-    (StatusCode::OK, Json(response))
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum Entry {
+    I32(i32),
+    String(String),
 }
 
 #[derive(Deserialize)]
 pub struct DataRequest {
-    // Add any fields here
+    data: Vec<Entry>,
 }
 
 #[derive(Serialize)]
 pub struct DataResponse {
-    // Add any fields here
+    string_len: usize,
+    int_sum: i32
 }

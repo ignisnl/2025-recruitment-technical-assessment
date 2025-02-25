@@ -1,23 +1,24 @@
 import express, { Request, Response } from "express";
 
 // ==== Type Definitions, feel free to add or modify ==========================
-interface cookbookEntry {
-  name: string;
-  type: string;
-}
 
 interface requiredItem {
   name: string;
   quantity: number;
 }
 
-interface recipe extends cookbookEntry {
+interface recipe {
+  type: "recipe";
   requiredItems: requiredItem[];
 }
 
-interface ingredient extends cookbookEntry {
+interface ingredient {
+  type: "ingredient";
   cookTime: number;
 }
+type cookbookEntry = (recipe | ingredient) & {
+  name: string;
+};
 
 // =============================================================================
 // ==== HTTP Endpoint Stubs ====================================================
@@ -26,7 +27,7 @@ const app = express();
 app.use(express.json());
 
 // Store your recipes here!
-const cookbook: any = null;
+const cookbook: Array<cookbookEntry> = [];
 
 // Task 1 helper (don't touch)
 app.post("/parse", (req: Request, res: Response) => {
@@ -57,8 +58,38 @@ const parse_handwriting = (recipeName: string): string | null => {
 // [TASK 2] ====================================================================
 // Endpoint that adds a CookbookEntry to your magical cookbook
 app.post("/entry", (req: Request, res: Response) => {
-  // TODO: implement me
-  res.status(500).send("not yet implemented!");
+  const data: cookbookEntry = req.body;
+  if (cookbook.find((x) => x.name === data.name) !== undefined) {
+    res.status(400).send(`entry with name ${data.name} already exists`);
+    return;
+  }
+  
+  if (data.type !== "recipe" && data.type !== "ingredient") {
+    res.status(400).send("invalid type");
+    return;
+  }
+  
+  if (data.type === "recipe") {
+    if (
+      [...new Set(data.requiredItems.map((item) => item.name))].length !==
+      data.requiredItems.length
+    ) {
+      res.status(400).send("multiple required items with same name");
+      return;
+    }
+    
+    cookbook.push(data);
+  } else if (data.type === "ingredient") {
+    if (data.cookTime < 0) {
+      res.status(400).send("invalid cook time");
+      return;
+    }
+
+    cookbook.push(data);
+  }
+
+  res.json({});
+  return;
 });
 
 // [TASK 3] ====================================================================
